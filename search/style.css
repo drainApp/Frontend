@@ -19,7 +19,7 @@ body {
     height: 50px;
 }
 #searchbar {
-    width: 450px;
+    width: 420px;
     height: 50px;
     text-shadow: none; 
     font-family: 'Segoe UI', 'Roboto', arial, sans-serif;  
@@ -30,19 +30,15 @@ body {
     background-color: white;
     outline: none;
     padding: 0;
-    border: solid rgb(75, 67, 68);
-
+    border: 3px solid rgb(75, 67, 68);
 }
-
-
 
 .b{
     width: 50px;
     height: 50px;
-    border: 1.371px solid rgb(75, 67, 68);
+    border: 3px solid rgb(75, 67, 68);
     background-color:rgb(75, 67, 68);
     cursor: pointer;
-    
 }
 
 .rank{
@@ -53,23 +49,25 @@ body {
     background-color: white;
     border: 2px solid black;
     border-radius: 10px;
-    font-size: 1.12em;
+    font-size: 16px;
     padding-left: 5px;
     top: 57vh;
     left: 3vw;
     position: absolute;
 }
 
-
 #logo2{
     height: 50px;
 }
+
 #logo1{
-    height: 120px;
+    height: 110px;
 }
+
 #a{
     display: flex;
 }
+
 .dot{
     color:brown;
     margin-right: 4px;
