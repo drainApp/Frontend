@@ -200,8 +200,10 @@ let furniture;
 var stopTime;
 let random3;
 var walls;
+var bottoms;
 let itemUSB;
 let PC;
+let Door;
 var play = {
     create : function(){
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -213,9 +215,13 @@ var play = {
         items = game.add.group();
         trash.create(1050, 0, "UI")
         walls = new DontMoveFurniture(0, 0, "Wall")
+        bottoms = new DontMoveFurniture(0, 490, "Bottom")
         new Furniture(530, 500, "Table");
         new Furniture(550, 210, "Monitor");
         new Furniture(543, 405, "KeyBoard");
+        Door = new DontMoveFurniture(1450, 13, "Door");
+        new DontMoveFurniture(1900, 300, "Drawer");
+        new DontMoveFurniture(3100, 370, "GoldGo");
         PC = new Furniture(350, 330, "PC");
         new Furniture(700, 400, "Mouse");
         itemUSB = new Item("USB");
@@ -235,6 +241,8 @@ var play = {
         }
         walls.sprite.scale.x = 10;
         walls.sprite.scale.y = 2;
+        bottoms.sprite.scale.x = 10;
+        bottoms.sprite.scale.y = 2;
         for(var i = 0 ; i<items.length; i++){
             items.children[i].scale.x = 0.27;
             items.children[i].scale.y = 0.27;
