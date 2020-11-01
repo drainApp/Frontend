@@ -12,7 +12,9 @@ var Main = {
         game.load.image("Mover", "./assets/Mover.png");
         game.load.image("UI", "./assets/Item.png");
         game.load.image("Monitor", "./assets/Monitor.png");
+        game.load.image("Monitor_Die", "./assets/Monitor_Die.png");
         game.load.image("USB", "./assets/USB.png");
+        game.load.image("KEY", "./assets/KEY.png");
         game.load.image("Door", "./assets/Door.png");
         game.load.image("Door_Open", "./assets/Door_Open.png");
         game.load.image("GoldGo", "./assets/GoldGo.png");

@@ -53,12 +53,33 @@ class DontMoveFurniture{
 class Item{
     constructor(name){
         var y = 50 + (items.length * 200);
-        this.sprite = items.create(1120, y, name);
+        this.sprite = items.create(1120+game.camera.x, y, name);
         this.sprite.inputEnabled = true;
         this.sprite.anchor.setTo(0.5, 0.5);
         this.sprite.input.enableDrag();
        this.sprite.events.onDragStart.add(itemDragStart, this.sprite);
         this.sprite.events.onDragStop.add(listener, this.sprite);
+    }
+}
+function getItem(_name){
+    console.log(_name);
+    switch(_name.key){
+        case 'USB':
+            itemUSB = new Item("USB");
+            itemUSB.sprite.scale.x = 0.27;
+            itemUSB.sprite.scale.y = 0.27;
+            usbAlive = false;
+            _name.destroy();
+            game.physics.arcade.enable(itemUSB.sprite);
+            break;
+        case 'KEY':
+            itemKEY = new Item("KEY");
+            itemKEY.sprite.scale.x = 0.27;
+            itemKEY.sprite.scale.y = 0.27;
+            _name.destroy();
+            game.physics.arcade.enable(itemKEY.sprite);
+            break;
+
     }
 }
 function itemDragStart(_gagu){
@@ -68,6 +89,10 @@ function itemDragStart(_gagu){
             itemPos[0] = _gagu.position.y;
             itemDragOn[0] = true;
             break;
+        case "KEY":
+            itemPos[1] = _gagu.position.y;
+            itemDragOn[1] = true;
+            break;
     }
 }
 function listener (_gagu){
@@ -76,13 +101,63 @@ function listener (_gagu){
         case "USB":
             itemDragOn[0] = false;
             _gagu.position.y = itemPos[0];
+            _gagu.position.x = 1120+game.camera.x;
             break;
+        case "KEY":
+                itemDragOn[1] = false;
+                _gagu.position.y = itemPos[1];
+                _gagu.position.x = 1120+game.camera.x;
+                break;
     }
 }
 function USBOn(_usb, _pc){
     console.log("ON");
     _pc.loadTexture('PC_USB', 0);
+    Monitor.sprite.loadTexture('Monitor_Die', 0);
+    game.add.text(470, 280, '@sokisinside', { font: "24px Arial", fill: "#ffffff", align: "center"});
     _usb.destroy();
+}
+function DoorOn(_key, _door){
+    console.log("ON");
+    _door.loadTexture('Door_Open', 0);
+    _key.destroy();
+}
+function GameEnd(){
+    if(endText == null){
+        game.add.text(1500, 280, "He's gone", { font: "24px Arial", fill: "#ffffff", align: "center"});
+    }
+}
+function DrawerChange(_gagu){
+    console.log(_gagu.key)
+    switch(nowDrawers){
+        case 0:
+           _gagu.loadTexture('Drawer_Up');
+            nowDrawers = 1;
+            break;
+        case 1:
+            _gagu.loadTexture('Drawer');
+            nowDrawers = 2;
+            break;
+        case 2:
+            _gagu.loadTexture('Drawer_Down');
+            nowDrawers = 3;
+            if(usbAlive){
+            if(f_items[0] == null){
+                f_items[0] = game.add.sprite(1950, 450, "USB");
+                f_items[0].inputEnabled = true;
+                f_items[0].events.onInputDown.add(getItem, this);
+            }
+             f_items[0].scale.y = 0.2; f_items[0].scale.x = 0.2;
+            }
+            break;
+        case 3:
+            _gagu.loadTexture('Drawer');
+            if(usbAlive){
+                f_items[0].scale.y = 0; f_items[0].scale.x = 0;
+            }
+            nowDrawers = 0;
+            break;
+    }
 }
 function Npc1Collision (_pc, _npc){
     if(player.talkKey.downDuration(25) && textpanel.text._text == "" && canTalk){
@@ -148,6 +223,25 @@ function MoverClick(_mover){
         }
     }
 }
+function keyPress(char) {
+    if(game.camera.x == 2400){
+        if(parseInt(char)>=1 && parseInt(char) <= 6 ){
+            if(words.length== 4)
+                words = "";
+            words += char;
+            text.setText(words);
+            if(words == "4143"){
+                GoldGo.sprite.loadTexture('GoldGo_Open');
+                f_items[1] = new DontMoveFurniture(3140, 453, "KEY");
+                f_items[1].sprite.inputEnabled = true;
+                f_items[1].sprite.events.onInputDown.add(getItem, this);
+                f_items[1].sprite.scale.x = 0.18;
+                f_items[1].sprite.scale.y = 0.18;
+            }
+            console.log(words);
+        }
+    }
+}
 var textMessage = new Array( 
   "(으악)" //0
 , "(그러나 이젠 그림을 그릴  수 없었다.)"
@@ -179,6 +273,9 @@ var textMessage = new Array(
 , ""
 , ""
 )
+var words = "0000";
+var text;
+var endText;
 var itemPos=[];
 var itemDragOn=[];
 var itemUI;
@@ -202,8 +299,15 @@ let random3;
 var walls;
 var bottoms;
 let itemUSB;
+let itemKEY;
+let Monitor;
 let PC;
 let Door;
+let Drawers;
+let GoldGo;
+var nowDrawers = 0;
+var f_items = [];
+var usbAlive = true;
 var play = {
     create : function(){
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -213,18 +317,22 @@ var play = {
         furniture = game.add.group();
         trash = game.add.group();
         items = game.add.group();
-        trash.create(1050, 0, "UI")
-        walls = new DontMoveFurniture(0, 0, "Wall")
-        bottoms = new DontMoveFurniture(0, 490, "Bottom")
+        trash.create(1050, 0, "UI");
+        text = game.add.text(3140, 250, words, { font: "24px Arial", fill: "#B62C1F", align: "center" , backgroundColor: "#000000"});
+        walls = new DontMoveFurniture(0, 0, "Wall");
+        bottoms = new DontMoveFurniture(0, 490, "Bottom");
         new Furniture(530, 500, "Table");
-        new Furniture(550, 210, "Monitor");
+        Monitor =  new Furniture(550, 210, "Monitor");
         new Furniture(543, 405, "KeyBoard");
         Door = new DontMoveFurniture(1450, 13, "Door");
-        new DontMoveFurniture(1900, 300, "Drawer");
-        new DontMoveFurniture(3100, 370, "GoldGo");
+        Door.sprite.inputEnabled = true;
+        Door.sprite.events.onInputDown.add(GameEnd, this);
+        Drawers = new DontMoveFurniture(1900, 300, "Drawer");
+        Drawers.sprite.inputEnabled = true;
+        Drawers.sprite.events.onInputDown.add(DrawerChange, this);
+        GoldGo = new DontMoveFurniture(3100, 370, "GoldGo");
         PC = new Furniture(350, 330, "PC");
         new Furniture(700, 400, "Mouse");
-        itemUSB = new Item("USB");
         mover[0] = game.add.sprite(900, 300, "Mover")
         mover[1] = game.add.sprite(150, 300, "Mover" )
         for(var i = 0 ; i<2; i++){
@@ -243,11 +351,7 @@ var play = {
         walls.sprite.scale.y = 2;
         bottoms.sprite.scale.x = 10;
         bottoms.sprite.scale.y = 2;
-        for(var i = 0 ; i<items.length; i++){
-            items.children[i].scale.x = 0.27;
-            items.children[i].scale.y = 0.27;
-            game.physics.arcade.enable(items.children[i]);
-        }
+        game.input.keyboard.addCallbacks(this, null, null, keyPress);
         game.scale.pageAlignHorizontally = true;
         game.scale.pageAlignVertically = true;
         game.stage.backgroundColor = "#1c242e";
@@ -267,7 +371,12 @@ var play = {
         music.play();
         }
         if(itemDragOn[0] == false){
-            game.physics.arcade.collide(itemUSB.sprite, PC.sprite, USBOn, null, this);
+            if(itemUSB != null)
+                game.physics.arcade.collide(itemUSB.sprite, PC.sprite, USBOn, null, this);
+        }
+        if(itemDragOn[1] == false){
+        if(itemKEY != null)
+                game.physics.arcade.collide(itemKEY.sprite, Door.sprite, DoorOn, null, this);
         }
     //    textpanel.sprite.x = game.camera.x;
     //    textpanel.text.x = game.camera.x+600;
