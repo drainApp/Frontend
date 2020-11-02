@@ -1,4 +1,4 @@
-var game = new Phaser.Game(1200, 800, Phaser.CANVAS, "GameDiv");
+var game = new Phaser.Game(1100, 700, Phaser.CANVAS, "GameDiv");
 var text;
 var score;
 var scoreText;
@@ -16,7 +16,7 @@ class Player {
         this.moveSpeed= 200;
         this.jumpSpeed= -350;
         this.isJumping = false;
-        this.sprite.body.gravity.y = 300;
+        this.sprite.body.gravity.y = 800;
         this.sprite.body.collideWorldBounds = true;
     }
     update() {
@@ -26,7 +26,7 @@ class Player {
 }
 class Crow{
     constructor(x, y){
-        this.sprite = game.add.sprite(x, y, "Crow"); 
+        this.sprite = platforms.create(x, y, "Crow"); 
         this.sprite.anchor.setTo(0.5, 0.5);
         game.physics.arcade.enable(this.sprite);
         this.sprite.animations.add('move', [0, 1], 7, true);
@@ -35,7 +35,7 @@ class Crow{
 }
 class TextPanel{
     constructor(a){
-        this.sprite = game.add.sprite(0, 700, "textPanel");
+        this.sprite = game.add.sprite(0, 600, "textPanel");
         this.style = { font: "16px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.sprite.width, align: "center" };
         this.text = game.add.text(game.camera.x+600, 750, textMessage[a], this.style);
         this.text.anchor.set(0.5);
@@ -144,6 +144,8 @@ let rerollButton;
 let trash;
 let npc;
 var stopTime;
+var crow = [];
+var crowOn = false;
 let random3;
 var play = {
     create : function(){
@@ -179,8 +181,10 @@ var play = {
         npc.create(750, 1978, 'PeopleSit');
         npc.create(900, 1974, 'NPC1');
         npc.create(1050, 1978, 'PeopleSit');
-        new Crow(1650, 2000);
-        new Crow(1850, 2200);
+        crow[0]= new Crow(1650, 200);
+        crow[1]= new Crow(1750, 200);
+        crow[2]= new Crow(1850, 200);
+        crow[3]= new Crow(1950, 200);
         game.physics.enable(npc, Phaser.Physics.ARCADE);
         for(let i = 0; i< npc.length ; i++){
             npc.children[i].body.immovable = true;
@@ -209,8 +213,8 @@ var play = {
        player.update();
        textpanel.sprite.x = game.camera.x;
        textpanel.text.x = game.camera.x+600;
-       textpanel.sprite.y = game.camera.y + 600;
-       textpanel.text.y = game.camera.y + 680;
+       textpanel.sprite.y = game.camera.y + 500;
+       textpanel.text.y = game.camera.y + 580;
        if(textpanel.text.text == ""){
         if(player.key.right.isDown ){
            player.sprite.body.velocity.x = player.moveSpeed;
@@ -229,17 +233,24 @@ var play = {
             console.log("JUMP");
             player.sprite.body.y -= 5;
             player.sprite.body.velocity.y = -400;
-            
             }
        //game.input.activePointer.leftButton.isDown
        if(player.talkKey.downDuration(25)&& lastTextTime+50 < game.time.now){
             lastTextTime = game.time.now;
             textpanel.destructor();
        }
-    //    if(player.sprite.x > 1350 && player.sprite.body.velocity.x > 0)
-    //         player.sprite.body.velocity.x = 0;
+        // if(player.sprite.x > 1350 && player.sprite.body.velocity.x > 0 && true) // 까마귀 올라갓으면
+        //      player.sprite.body.velocity.x = 0;
+        if(true && !crowOn){
+            for(var i =0 ; i< crow.length ; i++){
+                crow[i].sprite.y = 2000 + (i*200);
+            }
+            crowOn = true;
+        }
        game.physics.arcade.collide(player.sprite, platforms);
        game.physics.arcade.collide(player.sprite, npc, Npc1Collision, null, this);
     }
+
+    
 }
     game.state.add("Play", play);
