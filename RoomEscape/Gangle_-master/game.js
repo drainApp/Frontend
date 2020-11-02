@@ -122,8 +122,8 @@ function DoorOn(_key, _door){
     _door.loadTexture('Door_Open', 0);
     _key.destroy();
 }
-function GameEnd(){
-    if(endText == null){
+function GameEnd(_door){
+    if(endText == null && _door.key == "Door_Open"){
         game.add.text(1500, 280, "He's gone", { font: "24px Arial", fill: "#ffffff", align: "center"});
     }
 }
