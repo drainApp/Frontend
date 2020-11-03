@@ -36,7 +36,7 @@ class Crow{
 class TextPanel{
     constructor(a){
         this.sprite = game.add.sprite(0, 600, "textPanel");
-        this.style = { font: "16px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.sprite.width, align: "center" };
+        this.style = { font: "30px Arial", fill: "#ff0044", wordWrap: true, wordWrapWidth: this.sprite.width, align: "center" };
         this.text = game.add.text(game.camera.x+600, 750, textMessage[a], this.style);
         this.text.anchor.set(0.5);
         this.num = a;
