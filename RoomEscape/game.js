@@ -1,4 +1,4 @@
-var game = new Phaser.Game(1200 , 800, Phaser.CANVAS, "GameDiv");
+var game = new Phaser.Game(1200 , 700, Phaser.CANVAS, "GameDiv");
 var text;
 var score;
 var scoreText;
