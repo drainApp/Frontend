@@ -5,6 +5,7 @@ body{
     /* user-select: none;
     overflow: hidden; */
     width: 100vw;
+    padding-top: 10px;
     height: 100vh; 
 }
 .MainText{
