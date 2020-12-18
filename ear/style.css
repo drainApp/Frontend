@@ -1,0 +1,49 @@
+body {
+        margin: 0;
+        box-sizing: border-box;
+        width: 100vw;
+        height: 100vh;
+		overflow: hidden;
+    }
+
+/* leaf animations */
+
+#leaves {
+	position:absolute;
+	width:100%;
+	text-align: center;
+	}
+
+.fall{
+    display: inline-block;
+    z-index: 1;
+    -webkit-animation: falling 5s 0s 1 forwards;
+}
+
+
+
+
+@-webkit-keyframes falling {
+    
+    0% {
+        -webkit-transform:
+            translate3d(300,0,0)
+            rotate(0deg);
+    }
+    
+    100% {
+        -webkit-transform:
+            translate3d(-350px,600px,0)
+            rotate(90deg);
+    }
+}
+
+
+img{
+	position: absolute;
+}
+#slash{
+	position: absolute;
+
+	display: none;
+}
